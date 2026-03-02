@@ -1,8 +1,12 @@
 lazy val counter = 1
 
-lazy val sources = cpg.call("<operator>.assignment").where(_.argument(2).filter(_.code == "<unknown> NULL")).argument(1).toList
+lazy val sources = cpg.call("<operator>.assignment").where(_.argument(2).filter(node => node.code == "(undefined4 *)0x0" || node.code == "(undefined8 *)0x0" || node.code == "<unknown> NULL")).argument(1).toList
 
-lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(_.code == "<unknown> NULL")).argument(1).toList
+lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(node => node.code == "(undefined4 *)0x0" || node.code == "(undefined8 *)0x0" || node.code == "<unknown> NULL")).argument(1).toList
+
+//lazy val sources = cpg.call("<operator>.assignment").where(_.argument(2).filter(_.code == "0")).argument(1).toList
+
+//lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(_.code == "0")).argument(1).toList
 
 lazy val sinks = cpg.call.name("<operator>.indirection").argument(1).isIdentifier.toList
 
