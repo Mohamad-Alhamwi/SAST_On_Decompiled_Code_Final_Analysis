@@ -6,11 +6,7 @@ lazy val dereferences = cpg.call.name("<operator>.indirection").argument(1).isId
 
 lazy val matched_dereferences = dereferences.filter(d => pointers.exists(p => p.name == d.name)).toList
 
-lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(_.code == "<unknown> NULL")).toList
-
-/* For decompiled code switch to this line:
-lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(_.code == "(undefined4 *)0x0")).toList
-*/
+lazy val null_checks = cpg.call("<operator>.notEquals").where(_.argument(2).filter(node => node.code == "(undefined4 *)0x0" || node.code == "<unknown> NULL")).argument(1).toList
 
 lazy val post_dominating_nodes = matched_dereferences.postDominatedBy.toList
 
